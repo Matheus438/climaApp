@@ -1,23 +1,50 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Image, StyleSheet, Text,View } from "react-native";//componentes usados 
 //estrutura basica pra começar sempre 
 function App() : React.JSX.Element {
+
+  const [city, SetCity] = useState<string>("São Paulo");
+  const [umidity, setHumidity] = useState<string>("15");
+  const [condition, setCondition] = useState<string>("Ensolarado");
+  const [rainProbability, setRainProbability] = useState<string>("30");
+  const [feelsLike, setFeelsLike] = useState<string>("41");
+  const [temperature, setTemperature] = useState<string>("37");
+  const [night, setNight] = useState<boolean>(false);
+
+  function isNight(){
+    const hour = new Date().getHours();
+    console.log(hour);
+
+    if(hour >= 18 || hour < 6){
+      setNight(true)
+    } else {
+      setNight(false)
+    }
+  }
+
+  useEffect(() => {
+    const intervalId = setInterval(()=> {
+      isNight();
+    }, 6000);
+  })
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, 
+    night == false ? styles.containerBgDay : styles.containerBgNoght]}>
       <View style={styles.header}>
-        <Text style={styles.city}>Presidente Epitácio</Text>
+        <Text style={styles.city}>{city}</Text>
       </View>
 
       <View style={styles.detailsContainer}>
-        <Text style={styles.temperature}>55°</Text>
+        <Text style={styles.temperature}>{temperature}°C</Text>
         <Image source={require('./src/assets/images/icon3.png')} style={styles.weatherIcon} />
       </View>
 
       <View>
-        <Text style={styles.weatherCondition}>Nublado</Text>
-        <Text style={styles.text}>Sensação Térmica: 179 °C</Text>
-        <Text style={styles.text}>Probabilidade de Chuva: 78%</Text>
-        <Text style={styles.text}>Umidade: 99%</Text>
+        <Text style={styles.weatherCondition}>{condition}</Text>
+        <Text style={styles.text}>{feelsLike}°C</Text>
+        <Text style={styles.text}>{rainProbability}%</Text>
+        <Text style={styles.text}>{umidity}%</Text>
       </View>
       <Image source={require('./src/assets/images/cidade.png')}
       style={styles.bottomImage}/>
@@ -36,7 +63,7 @@ const styles = StyleSheet.create({
     },
     header: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
+      justifyContent: 'center',
       marginBottom: 20
     },
     city: {
@@ -77,6 +104,12 @@ const styles = StyleSheet.create({
         color: '#fff',
         marginBottom: 10,
         fontStyle: 'italic'
+    },
+    containerBgDay: {
+      backgroundColor: '#09d3f3'
+    },
+    containerBgNoght: {
+      backgroundColor: '#333'
     },
 });
 
